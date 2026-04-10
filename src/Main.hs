@@ -7,11 +7,13 @@ import Data.Text qualified as T
 import Data.Text.IO qualified as TIO
 import Text.Pandoc
 
+latexOpts = def {readerExtensions = extensionsFromList [Ext_latex_macros]}
+
 main :: IO ()
 main = do
   input <- TIO.getContents
   result <- runIO $ do
-    doc <- readLaTeX def input
+    doc <- readLaTeX latexOpts input
     writeForester def doc
   rst <- handleError result
   TIO.putStrLn rst
@@ -37,7 +39,8 @@ clsName = \case
   "rem" -> "Remark"
   "defn" -> "Definition"
   "ex" -> "Example"
-  _ -> "Unknown class"
+  "thm" -> "Theorem"
+  cls -> cls
 
 inlineListToForester :: PandocMonad m => [Inline] -> m Text
 inlineListToForester = fmap T.concat . mapM inlineToForester
