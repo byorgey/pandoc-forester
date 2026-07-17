@@ -52,6 +52,7 @@ inlineToForester = \case
   SoftBreak -> pure " "
   Quoted qs is -> quoted qs <$> inlineListToForester is
   Emph is -> cmd "em" <$> inlineListToForester is
+  Strong is -> cmd "strong" <$> inlineListToForester is
   Math mathType txt -> pure $ math mathType txt
   Code _ c -> pure $ cmd "code" c
   i -> pure $ "!!{" <> T.pack (show i) <> "}"
