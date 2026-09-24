@@ -40,6 +40,8 @@ clsName = \case
   "defn" -> "Definition"
   "ex" -> "Example"
   "thm" -> "Theorem"
+  "lem" -> "Lemma"
+  "cor" -> "Corollary"
   cls -> cls
 
 inlineListToForester :: PandocMonad m => [Inline] -> m Text
@@ -55,6 +57,8 @@ inlineToForester = \case
   Strong is -> cmd "strong" <$> inlineListToForester is
   Math mathType txt -> pure $ math mathType txt
   Code _ c -> pure $ cmd "code" c
+  SmallCaps is -> cmd "sc" <$> inlineListToForester is
+  Span (_,a,_) is | "sans-serif" `elem` a -> cmd "sf" <$> inlineListToForester is
   i -> pure $ "!!{" <> T.pack (show i) <> "}"
 
 fixQuotes :: Text -> Text
